@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y unzip curl \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer install --no-dev --optimize-autoloader
 
-# Salin .env
+# Salin .env (pastikan .env.example ada)
 RUN cp .env.example .env
 
 # Generate app key
@@ -24,10 +24,7 @@ RUN php artisan key:generate
 # Set permission untuk storage dan bootstrap/cache
 RUN chmod -R 775 storage bootstrap/cache
 
-# Jalankan migrate
-RUN php artisan migrate --force
-
-# Expose port 80 untuk Apache
+# Expose port 80 untuk Apache (default)
 EXPOSE 80
 
 # Jalankan Apache
