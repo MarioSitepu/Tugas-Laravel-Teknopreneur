@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
-# Install ekstensi PHP yang dibutuhkan Laravel
-RUN docker-php-ext-install pdo pdo_mysql
+# Install ekstensi PHP (PDO untuk MySQL & SQLite)
+RUN docker-php-ext-install pdo pdo_mysql pdo_sqlite
 
 # Set working directory
 WORKDIR /var/www/html
@@ -22,9 +22,13 @@ RUN apt-get update && apt-get install -y unzip curl \
 RUN cp .env.example .env
 RUN php artisan key:generate
 
-# Ubah kepemilikan dan permission untuk folder storage dan bootstrap/cache
-RUN chown -R www-data:www-data storage bootstrap/cache
-RUN chmod -R 775 storage bootstrap/cache
+# Buat file SQLite dan set permission
+RUN mkdir -p database && touch database/database.sqlite \
+    && chown -R www-data:www-data database storage bootstrap/cache \
+    && chmod -R 775 database storage bootstrap/cache
+
+# Clear dan cache config biar pakai .env yang baru
+RUN php artisan config:clear && php artisan config:cache
 
 EXPOSE 80
 
