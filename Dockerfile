@@ -11,15 +11,24 @@ WORKDIR /var/www/html
 COPY . .
 
 # Install Composer dan dependencies Laravel
-RUN apt-get update && apt-get install -y unzip
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --optimize-autoloader
+RUN apt-get update && apt-get install -y unzip curl \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
+    && composer install --no-dev --optimize-autoloader
+
+# Salin .env
+RUN cp .env.example .env
+
+# Generate app key
+RUN php artisan key:generate
 
 # Set permission untuk storage dan bootstrap/cache
-RUN chmod -R 777 storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
-# Expose port 80 untuk web server
+# Jalankan migrate
+RUN php artisan migrate --force
+
+# Expose port 80 untuk Apache
 EXPOSE 80
 
-# Jalankan Laravel menggunakan Apache
+# Jalankan Apache
 CMD ["apache2-foreground"]
