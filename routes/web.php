@@ -20,8 +20,3 @@ Route::view('/info', 'info');
 Route::view('/deskripsi', 'deskripsi');
 Route::view('/add', 'add');
 
-// Route sementara untuk migrasi di Render
-Route::get('/migrate', function () {
-    Artisan::call('migrate', ['--force' => true]);
-    return 'Migrasi selesai!';
-});
