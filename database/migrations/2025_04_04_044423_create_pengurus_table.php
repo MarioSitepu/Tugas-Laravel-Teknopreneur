@@ -1,4 +1,6 @@
-public function up()
+<?php
+
+public function up(): void
 {
     Schema::create('pengurus', function (Blueprint $table) {
         $table->id();
@@ -7,4 +9,9 @@ public function up()
         $table->string('jabatan');
         $table->timestamps();
     });
+}
+
+public function down(): void
+{
+    Schema::dropIfExists('pengurus');
 }

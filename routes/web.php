@@ -20,3 +20,12 @@ Route::view('/info', 'info');
 Route::view('/deskripsi', 'deskripsi');
 Route::view('/add', 'add');
 
+// Jalankan migrate lewat browser (sementara saja untuk deploy)
+Route::get('/setup', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return '✅ Migrasi berhasil dijalankan!';
+    } catch (\Exception $e) {
+        return '❌ Error: ' . $e->getMessage();
+    }
+});
