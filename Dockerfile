@@ -19,5 +19,8 @@ RUN mkdir -p database && touch database/database.sqlite \
     && chown -R www-data:www-data storage bootstrap/cache database \
     && chmod -R 775 storage bootstrap/cache database
 
-EXPOSE 80
+RUN sed -i 's/80/10000/g' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
+EXPOSE 10000
+ENV PORT=10000
 CMD ["apache2-foreground"]
+    
